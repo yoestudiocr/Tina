@@ -23,3 +23,5 @@ PARA PUBLICAR:
 5. Samsung: Menú > Instalar aplicación o Añadir a pantalla de inicio.
 
 Los datos se guardan solamente en el dispositivo donde se usa.
+
+Gracias
