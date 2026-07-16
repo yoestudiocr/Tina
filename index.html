@@ -292,21 +292,25 @@ function renderExercise(){
 }
 
 function renderDailySummary(){
-  const underMin=categories.filter(c=>c.mode==="minimum"&&(current[c.id]||0)<goals()[c.id]);
+  const underGoal=categories.filter(c=>(current[c.id]||0)<goals()[c.id]);
   const overMax=categories.filter(c=>c.mode==="maximum"&&(current[c.id]||0)>goals()[c.id]);
+  const allGoalsMet=categories.every(c=>{
+    const value=current[c.id]||0,goal=goals()[c.id];
+    return c.mode==="minimum"?value>=goal:value===goal;
+  });
   const box=$("dailySummary");
   box.className="daily-summary";
   const parts=[];
-  if(underMin.length){
-    parts.push(underMin.map(c=>`Te faltan ${goals()[c.id]-(current[c.id]||0)} porciones de ${c.label.toLowerCase()}`).join(" y "));
+  if(underGoal.length){
+    parts.push(underGoal.map(c=>`Te faltan ${goals()[c.id]-(current[c.id]||0)} porciones de ${c.label.toLowerCase()}`).join(" y "));
   }
   if(overMax.length){
     parts.push(`Te pasaste en ${overMax.map(c=>c.label.toLowerCase()).join(", ")}`);
     box.classList.add("alert");
   }
-  if(!underMin.length&&!overMax.length){
+  if(allGoalsMet){
     box.classList.add("good");
-    box.textContent=exercise?"Cumpliste tu plan y también hiciste ejercicio. Día redondito ✨":"Vas cumpliendo muy bien tu plan de hoy 🌿";
+    box.textContent=exercise?"Cumpliste todo tu plan y también hiciste ejercicio. Día redondito ✨":"Cumpliste todo tu plan de hoy 🌿";
   }else{
     box.textContent=parts.join(". ")+".";
   }
@@ -340,7 +344,7 @@ function renderSummary(){
   const fullyGood=data.filter(([,r])=>{
     return categories.every(c=>{
       const v=r.portions?.[c.id]||0,g=r.goals?.[c.id]??goals()[c.id];
-      return c.mode==="minimum"?v>=g:v<=g;
+      return c.mode==="minimum"?v>=g:v===g;
     });
   }).length;
   $("summaryPerfect").textContent=fullyGood;
