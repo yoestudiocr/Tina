@@ -109,73 +109,459 @@ export function openFourWeekReport(records, profile, selectedDateKey){
 <html lang="es">
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Reporte Tina</title>
 <style>
-  @page{size:A4;margin:16mm}
-  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#3e3441;margin:0}
-  .cover{text-align:center;padding:20px 0 30px;border-bottom:3px solid #d9c1e8}
-  .logo{width:96px;height:96px;border-radius:24px;object-fit:cover}
-  h1{font-size:30px;margin:10px 0 2px}
-  h2{font-size:17px;margin:24px 0 10px;color:#745793}
+  :root{
+    --bg:#fdf8fb;
+    --panel:#ffffff;
+    --text:#3e3441;
+    --muted:#817583;
+    --border:#eadfea;
+    --lilac:#c9afe0;
+    --lilac-deep:#9877bb;
+    --lilac-soft:#f2ebf8;
+    --pink-soft:#f8edf3;
+    --sage:#a9c7a4;
+    --sage-soft:#edf5eb;
+    --amber-soft:#fbf3d9;
+    --danger-soft:#fbe8e8;
+    --shadow:0 12px 30px rgba(82,56,82,.08);
+  }
+
+  *{box-sizing:border-box}
+
+  body{
+    margin:0;
+    color:var(--text);
+    background:linear-gradient(180deg,#fdf8fb 0%,#f7f3fa 100%);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  }
+
+  .report-shell{
+    width:min(860px,100%);
+    margin:auto;
+    padding:22px 14px 40px;
+  }
+
+  .hero{
+    display:flex;
+    align-items:center;
+    gap:16px;
+    margin-bottom:16px;
+  }
+
+  .logo{
+    width:82px;
+    height:82px;
+    object-fit:cover;
+    border-radius:22px;
+    box-shadow:var(--shadow);
+    flex:0 0 auto;
+  }
+
+  h1,h2,h3,p{margin:0}
+  h1{font-size:1.8rem}
+  h2{font-size:1.08rem;margin-bottom:10px}
+  h3{font-size:.98rem}
   p{line-height:1.55}
-  .muted{color:#817583}
-  .meta{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:20px}
-  .meta div{background:#f4edf8;padding:10px;border-radius:10px}
-  table{width:100%;border-collapse:collapse;font-size:10px;margin-top:8px}
-  th,td{border:1px solid #e6dce7;padding:6px;text-align:center}
-  th{background:#f4edf8}
-  .note{background:#edf5eb;border-radius:12px;padding:12px;margin:8px 0}
-  .page-break{page-break-before:always}
-  .comments{height:180px;border:1px solid #ddd2df;border-radius:12px}
-  .footer{text-align:center;color:#817583;font-size:10px;margin-top:24px}
-  @media print{button{display:none}}
+  .muted{color:var(--muted)}
+
+  .card{
+    background:rgba(255,255,255,.96);
+    border:1px solid var(--border);
+    border-radius:22px;
+    padding:16px;
+    box-shadow:var(--shadow);
+    margin-bottom:14px;
+    break-inside:avoid;
+  }
+
+  .tint-lilac{background:var(--lilac-soft)}
+  .tint-pink{background:var(--pink-soft)}
+  .tint-sage{background:var(--sage-soft)}
+
+  .meta-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:10px;
+    margin-top:12px;
+  }
+
+  .meta-card{
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:12px;
+  }
+
+  .meta-card strong{
+    display:block;
+    margin-bottom:3px;
+  }
+
+  .stats-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:9px;
+    margin-top:12px;
+  }
+
+  .stat{
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:12px;
+    text-align:center;
+  }
+
+  .stat strong{
+    display:block;
+    font-size:1.35rem;
+    margin-top:4px;
+  }
+
+  .week-list{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:10px;
+    margin-top:12px;
+  }
+
+  .week-card{
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:18px;
+    padding:13px;
+  }
+
+  .week-top{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    align-items:flex-start;
+    margin-bottom:10px;
+  }
+
+  .pill{
+    display:inline-block;
+    padding:5px 9px;
+    border-radius:999px;
+    background:var(--lilac-soft);
+    color:var(--lilac-deep);
+    font-size:.78rem;
+    font-weight:700;
+  }
+
+  .progress{
+    height:10px;
+    border-radius:999px;
+    background:#f0ebf1;
+    overflow:hidden;
+    margin-top:8px;
+  }
+
+  .progress > span{
+    display:block;
+    height:100%;
+    border-radius:inherit;
+    background:var(--lilac-deep);
+  }
+
+  .group-list{
+    display:grid;
+    gap:10px;
+    margin-top:12px;
+  }
+
+  .group-row{
+    display:grid;
+    grid-template-columns:minmax(120px,1fr) 1.6fr auto;
+    gap:12px;
+    align-items:center;
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:11px 12px;
+  }
+
+  .group-bar{
+    height:10px;
+    border-radius:999px;
+    background:#f0ebf1;
+    overflow:hidden;
+  }
+
+  .group-bar span{
+    display:block;
+    height:100%;
+    border-radius:inherit;
+    background:var(--sage);
+  }
+
+  .observation{
+    background:#fff;
+    border:1px solid var(--border);
+    border-left:5px solid var(--lilac);
+    border-radius:16px;
+    padding:12px 14px;
+    margin-top:9px;
+  }
+
+  .daily-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:10px;
+  }
+
+  .day-card{
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:18px;
+    padding:13px;
+    break-inside:avoid;
+  }
+
+  .day-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:10px;
+    margin-bottom:10px;
+  }
+
+  .day-status{
+    font-size:.78rem;
+    font-weight:700;
+    padding:5px 8px;
+    border-radius:999px;
+    background:var(--amber-soft);
+  }
+
+  .day-status.complete{background:var(--sage-soft)}
+
+  .portion-mini-grid{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:6px;
+  }
+
+  .portion-mini{
+    background:#f9f6fa;
+    border-radius:12px;
+    padding:8px 4px;
+    text-align:center;
+    font-size:.82rem;
+  }
+
+  .comments{
+    min-height:180px;
+    border:1.5px dashed #d8cadb;
+    border-radius:18px;
+    background:#fff;
+  }
+
+  .print-button{
+    width:100%;
+    border:none;
+    border-radius:16px;
+    padding:14px 16px;
+    background:var(--lilac-deep);
+    color:white;
+    font-weight:700;
+    font-size:1rem;
+    margin-top:6px;
+    cursor:pointer;
+  }
+
+  .footer{
+    text-align:center;
+    color:var(--muted);
+    font-size:.82rem;
+    margin-top:18px;
+  }
+
+  @media(max-width:680px){
+    .meta-grid,.stats-grid,.week-list,.daily-grid{grid-template-columns:1fr}
+    .group-row{grid-template-columns:1fr}
+    .hero{align-items:flex-start}
+    .logo{width:68px;height:68px;border-radius:18px}
+  }
+
+  @media print{
+    @page{size:A4;margin:12mm}
+    body{
+      background:#fff;
+      -webkit-print-color-adjust:exact;
+      print-color-adjust:exact;
+    }
+    .report-shell{
+      width:100%;
+      padding:0;
+    }
+    .card{
+      box-shadow:none;
+    }
+    .print-button{
+      display:none!important;
+    }
+    .daily-grid{
+      grid-template-columns:repeat(2,1fr);
+    }
+    .week-list{
+      grid-template-columns:repeat(2,1fr);
+    }
+    .page-break{
+      break-before:page;
+    }
+  }
 </style>
 </head>
 <body>
-  <section class="cover">
-    <img class="logo" src="${new URL("../assets/logo.png", import.meta.url).href}" alt="Logo Tina">
-    <h1>Tina</h1>
-    <p class="muted">Reporte de adherencia al plan nutricional</p>
-    <h2>${escapeHtml(profile.name)}</h2>
-    <p><strong>Periodo:</strong> ${formatDate(blocks[0].start)} al ${formatDate(blocks[3].end)}</p>
-  </section>
+  <main class="report-shell">
+    <header class="hero">
+      <img class="logo" src="${new URL("../assets/logo.png", import.meta.url).href}" alt="Logo de Tina">
+      <div>
+        <h1>Tina</h1>
+        <p class="muted">Reporte de adherencia al plan nutricional</p>
+        <p style="margin-top:8px"><strong>${escapeHtml(profile.name)}</strong></p>
+        <p class="muted">${formatDate(blocks[0].start)} al ${formatDate(blocks[3].end)}</p>
+      </div>
+    </header>
 
-  <h2>Plan vigente al cierre del periodo</h2>
-  <div class="meta">
-    ${categories.map(c=>`<div><strong>${c.label}</strong><br>${latestPlan.goals[c.id]} porciones</div>`).join("")}
-    <div><strong>Ejercicio</strong><br>${exerciseGoal} días por semana</div>
-  </div>
+    <section class="card tint-lilac">
+      <h2>Resumen ejecutivo</h2>
+      <p>${summaryText}</p>
 
-  <h2>Resumen ejecutivo</h2>
-  <div class="note">${summaryText}</div>
+      <div class="stats-grid">
+        <div class="stat">
+          <span class="muted">Días registrados</span>
+          <strong>${overall.registered.length}/28</strong>
+        </div>
+        <div class="stat">
+          <span class="muted">Plan completo</span>
+          <strong>${overall.complete}</strong>
+        </div>
+        <div class="stat">
+          <span class="muted">Adherencia</span>
+          <strong>${overall.adherence}%</strong>
+        </div>
+        <div class="stat">
+          <span class="muted">Meta de ejercicio</span>
+          <strong>${metExerciseWeeks}/4</strong>
+        </div>
+      </div>
+    </section>
 
-  <h2>Evolución semanal</h2>
-  <table>
-    <thead><tr><th>Semana</th><th>Periodo</th><th>Registros</th><th>Plan completo</th><th>Adherencia</th><th>Ejercicio</th></tr></thead>
-    <tbody>${weeklyRows}</tbody>
-  </table>
+    <section class="card tint-pink">
+      <h2>Plan vigente al cierre del periodo</h2>
+      <div class="meta-grid">
+        ${categories.map(c=>`
+          <div class="meta-card">
+            <strong>${c.emoji} ${c.label}</strong>
+            <span>${latestPlan.goals[c.id]} porciones</span>
+          </div>`).join("")}
+        <div class="meta-card">
+          <strong>🏃 Ejercicio</strong>
+          <span>${exerciseGoal} días por semana</span>
+        </div>
+      </div>
+    </section>
 
-  <h2>Promedios por grupo</h2>
-  <table>
-    <thead><tr><th>Grupo</th><th>Meta actual</th><th>Promedio</th><th>Días por debajo</th><th>Días por encima</th></tr></thead>
-    <tbody>${averages}</tbody>
-  </table>
+    <section class="card">
+      <h2>Evolución semanal</h2>
+      <div class="week-list">
+        ${weekly.map(w=>`
+          <article class="week-card">
+            <div class="week-top">
+              <div>
+                <h3>${w.label}</h3>
+                <p class="muted">${formatShort(w.start)}–${formatShort(w.end)}</p>
+              </div>
+              <span class="pill">${w.adherence}%</span>
+            </div>
+            <p><strong>${w.complete}</strong> días con plan completo</p>
+            <p class="muted">${w.registered.length}/7 días registrados · ejercicio ${w.exercise}/${exerciseGoal}${w.exercise>=exerciseGoal?" ✓":""}</p>
+            <div class="progress"><span style="width:${Math.min(100,w.adherence)}%"></span></div>
+          </article>`).join("")}
+      </div>
+    </section>
 
-  <h2>Observaciones automáticas</h2>
-  ${observations.map(o=>`<div class="note">${escapeHtml(o)}</div>`).join("")}
+    <section class="card tint-sage">
+      <h2>Promedios por grupo</h2>
+      <div class="group-list">
+        ${categories.map(c=>{
+          const average=overall.stats[c.id].average;
+          const goal=latestPlan.goals[c.id] || 0;
+          const pct=goal ? Math.min(100,(average/goal)*100) : 100;
+          return `
+          <div class="group-row">
+            <div><strong>${c.emoji} ${c.label}</strong><div class="muted">Meta ${goal}</div></div>
+            <div class="group-bar"><span style="width:${pct}%"></span></div>
+            <div><strong>${average.toFixed(1)}</strong> prom.</div>
+          </div>`;
+        }).join("")}
+      </div>
+    </section>
 
-  <div class="page-break"></div>
-  <h2>Registro diario</h2>
-  <table>
-    <thead><tr><th>Fecha</th><th>Plan</th><th>Ej.</th><th>P</th><th>V</th><th>F</th><th>H</th><th>G</th></tr></thead>
-    <tbody>${rows}</tbody>
-  </table>
+    <section class="card">
+      <h2>Observaciones automáticas</h2>
+      ${observations.map(o=>`<div class="observation">${escapeHtml(o)}</div>`).join("")}
+    </section>
 
-  <h2>Comentarios del profesional</h2>
-  <div class="comments"></div>
+    <section class="card page-break">
+      <h2>Registro diario</h2>
+      <div class="daily-grid">
+        ${allDates.map(key=>{
+          const rec=records[key];
+          if(!rec){
+            return `
+              <article class="day-card">
+                <div class="day-head">
+                  <div>
+                    <h3>${formatShort(parseDate(key))}</h3>
+                    <p class="muted">Sin registro</p>
+                  </div>
+                  <span class="day-status">Sin datos</span>
+                </div>
+              </article>`;
+          }
+          const plan=activePlanForDate(profile,key);
+          const status=dayStatus(rec.portions,plan.goals);
+          return `
+            <article class="day-card">
+              <div class="day-head">
+                <div>
+                  <h3>${formatShort(parseDate(key))}</h3>
+                  <p class="muted">Ejercicio: ${rec.exercise?"Sí":"No"}</p>
+                </div>
+                <span class="day-status ${status.complete?"complete":""}">${status.complete?"Plan completo":"Plan incompleto"}</span>
+              </div>
+              <div class="portion-mini-grid">
+                ${categories.map(c=>`
+                  <div class="portion-mini">
+                    <div>${c.emoji}</div>
+                    <strong>${rec.portions[c.id]||0}/${plan.goals[c.id]}</strong>
+                  </div>`).join("")}
+              </div>
+            </article>`;
+        }).join("")}
+      </div>
+    </section>
 
-  <div class="footer">Generado por Tina · Tu plan, un día a la vez.</div>
-  <script>window.addEventListener("load",()=>setTimeout(()=>window.print(),300));</script>
+    <section class="card">
+      <h2>Comentarios del profesional</h2>
+      <div class="comments"></div>
+    </section>
+
+    <button id="printReportButton" class="print-button" type="button">Guardar como PDF</button>
+
+    <div class="footer">Generado por Tina · Tu plan, un día a la vez.</div>
+  </main>
+
+  <script>
+    document.getElementById("printReportButton").addEventListener("click",()=>window.print());
+  </script>
 </body>
 </html>`;
 
