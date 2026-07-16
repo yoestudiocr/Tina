@@ -24,8 +24,8 @@
       </div>
 
       <section class="card tint-lilac">
-        <h2>Tu información</h2>
-        <p class="helper">Todo se guarda únicamente en este dispositivo.</p>
+        <h2 id="profileSectionTitle">Tu información</h2>
+        <p id="profileSectionHelper" class="helper">Todo se guarda únicamente en este dispositivo.</p>
         <label>
           Tu nombre
           <input id="profileName" type="text" autocomplete="name" placeholder="Ej. Franciny">
@@ -61,7 +61,10 @@
         </label>
       </section>
 
-      <button id="saveProfileButton" class="button primary" type="button">Guardar mi plan</button>
+      <div id="setupActions" class="setup-actions">
+        <button id="cancelPlanButton" class="button secondary hidden" type="button">Cancelar</button>
+        <button id="saveProfileButton" class="button primary" type="button">Guardar mi plan</button>
+      </div>
     </section>
 
     <section id="mainScreen" class="screen hidden">
@@ -115,6 +118,21 @@
         <p class="privacy-note">Sin cuentas, sin nube y sin base de datos.</p>
       </section>
     </section>
+
+    <section id="reportScreen" class="screen hidden">
+      <header class="report-nav no-print">
+        <button id="backFromReportButton" class="back-button" type="button" aria-label="Volver al inicio">← Volver</button>
+        <strong>Reporte</strong>
+        <span class="report-nav-spacer" aria-hidden="true"></span>
+      </header>
+
+      <div id="reportContent"></div>
+
+      <button id="printReportButton" class="button primary report-print-button no-print" type="button">
+        Guardar como PDF
+      </button>
+    </section>
+
   </main>
 
   <div id="toast" class="toast" aria-live="polite"></div>

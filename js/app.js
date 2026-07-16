@@ -2,7 +2,7 @@
 import {loadProfile,saveProfile,loadRecords,saveRecords,clearRecords} from "./storage.js";
 import {categories,isoLocal,parseDate,addDays,formatShort,emptyPortions,activePlanForDate,dayStatus} from "./utils.js";
 import {buildDailyMessage,buildWeeklySummary} from "./insights.js";
-import {openFourWeekReport} from "./report.js";
+import {renderFourWeekReport} from "./report.js";
 
 const $=id=>document.getElementById(id);
 let profile=loadProfile();
@@ -21,23 +21,52 @@ function toast(text){
   toast.timer=setTimeout(()=>el.classList.remove("show"),1800);
 }
 
+function hideAllScreens(){
+  $("setupScreen").classList.add("hidden");
+  $("mainScreen").classList.add("hidden");
+  $("reportScreen").classList.add("hidden");
+}
+
 function showSetup(isEdit=false){
   editing=isEdit;
+  hideAllScreens();
   $("setupScreen").classList.remove("hidden");
-  $("mainScreen").classList.add("hidden");
   $("profileName").value=profile?.name||"";
-  const active=profile ? activePlanForDate(profile,$("selectedDate").value||isoLocal()) : {goals:defaults};
-  categories.forEach(c=>$("goal"+capitalize(c.id)).value=active.goals[c.id] ?? defaults[c.id]);
+
+  const effectiveDate = $("selectedDate").value || isoLocal();
+  const active=profile ? activePlanForDate(profile,effectiveDate) : {goals:defaults};
+
+  categories.forEach(c=>{
+    $("goal"+capitalize(c.id)).value=active.goals[c.id] ?? defaults[c.id];
+  });
+
   $("exerciseGoal").value=String(profile?.exerciseGoal ?? 3);
-  $("saveProfileButton").textContent=isEdit?"Guardar nuevo plan":"Guardar mi plan";
+  $("saveProfileButton").textContent=isEdit ? "Guardar nuevo plan" : "Guardar mi plan";
+  $("cancelPlanButton").classList.toggle("hidden",!isEdit);
+
+  $("profileSectionTitle").textContent=isEdit ? "Editar plan nutricional" : "Tu información";
+  $("profileSectionHelper").textContent=isEdit
+    ? `Los cambios se aplicarán a partir del ${effectiveDate} y no modificarán tu historial anterior.`
+    : "Todo se guarda únicamente en este dispositivo.";
 }
 
 function showMain(){
-  $("setupScreen").classList.add("hidden");
+  hideAllScreens();
   $("mainScreen").classList.remove("hidden");
   $("greeting").textContent=`Hola, ${profile.name} 🌷`;
   $("selectedDate").value=$("selectedDate").value||isoLocal();
   loadDay();
+}
+
+function showReport(){
+  $("reportContent").innerHTML = renderFourWeekReport(
+    records,
+    profile,
+    $("selectedDate").value
+  );
+  hideAllScreens();
+  $("reportScreen").classList.remove("hidden");
+  window.scrollTo({top:0,behavior:"instant"});
 }
 
 function capitalize(s){return s.charAt(0).toUpperCase()+s.slice(1)}
@@ -201,10 +230,23 @@ $("exerciseToggle").addEventListener("click",()=>{
   render();
 });
 $("editPlanButton").addEventListener("click",()=>showSetup(true));
+
+$("cancelPlanButton").addEventListener("click",()=>{
+  editing=false;
+  showMain();
+  window.scrollTo({top:0,behavior:"instant"});
+});
 $("downloadReportButton").addEventListener("click",()=>{
-  try{openFourWeekReport(records,profile,$("selectedDate").value)}
+  try{showReport()}
   catch(error){toast(error.message)}
 });
+
+$("backFromReportButton").addEventListener("click",()=>{
+  showMain();
+  window.scrollTo({top:0,behavior:"instant"});
+});
+
+$("printReportButton").addEventListener("click",()=>window.print());
 $("clearHistoryButton").addEventListener("click",()=>{
   if(confirm("¿Seguro que quieres borrar todo el historial de este dispositivo?")){
     records={};
