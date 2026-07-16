@@ -1,0 +1,25 @@
+TINA - PWA
+
+Tu plan, un día a la vez.
+
+Incluye:
+- Configuración inicial con nombre y metas personales.
+- Registro diario de proteínas, vegetales, frutas, harinas y grasas.
+- Ejercicio sí/no.
+- Proteínas y vegetales pueden superar la meta sin alarma.
+- Frutas, harinas y grasas muestran alerta roja al excederse.
+- Avisos cuando faltan proteínas.
+- Resumen semanal y mensual.
+- Descarga de reporte PDF.
+- Edición del plan.
+- Borrado completo del historial.
+- Funcionamiento offline después de instalar.
+
+PARA PUBLICAR:
+1. Descomprime este ZIP.
+2. Sube la carpeta completa a un hosting HTTPS como Netlify, GitHub Pages, Vercel o Cloudflare Pages.
+3. Abre el enlace en el teléfono.
+4. iPhone: Compartir > Añadir a pantalla de inicio.
+5. Samsung: Menú > Instalar aplicación o Añadir a pantalla de inicio.
+
+Los datos se guardan solamente en el dispositivo donde se usa.
