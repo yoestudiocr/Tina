@@ -3,504 +3,122 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#D8B4C8">
+  <meta name="theme-color" content="#d9c1e8">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Tina">
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="apple-touch-icon" href="assets/icon-192.png">
+  <link rel="stylesheet" href="css/main.css">
   <title>Tina</title>
-  <style>
-    :root{
-      --bg:#FFF9FC;
-      --card:#FFFFFF;
-      --text:#3E3340;
-      --muted:#7F7280;
-      --pink:#D8B4C8;
-      --pink-soft:#F6E8F1;
-      --lav:#BFA6D8;
-      --lav-soft:#F0EAF8;
-      --green:#9EC39A;
-      --green-soft:#EAF4E8;
-      --yellow:#E9D59B;
-      --yellow-soft:#FFF7DE;
-      --red:#D97A7A;
-      --red-soft:#FCEAEA;
-      --border:#EADDE6;
-      --shadow:0 12px 30px rgba(91,65,82,.08);
-    }
-    *{box-sizing:border-box}
-    body{margin:0;background:linear-gradient(180deg,#FFF9FC 0%,#F9F5FB 100%);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-    button,input{font:inherit}
-    button{cursor:pointer}
-    .app{width:min(760px,100%);margin:auto;padding:18px 14px calc(36px + env(safe-area-inset-bottom))}
-    .hidden{display:none!important}
-    .hero{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
-    h1{margin:0;font-size:1.55rem}
-    h2{margin:0;font-size:1.05rem}
-    p{margin:0}
-    .muted{color:var(--muted);font-size:.9rem}
-    .card{background:rgba(255,255,255,.94);border:1px solid var(--border);border-radius:22px;padding:16px;box-shadow:var(--shadow);margin-bottom:14px}
-    .soft-pink{background:var(--pink-soft)}
-    .soft-lav{background:var(--lav-soft)}
-    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    label{display:block;font-size:.9rem}
-    input[type=text],input[type=number],input[type=date]{
-      width:100%;margin-top:6px;border:1px solid var(--border);border-radius:14px;padding:11px 12px;background:#fff;color:var(--text)
-    }
-    .primary,.secondary,.danger{
-      width:100%;border:none;border-radius:16px;padding:13px 16px;font-weight:700
-    }
-    .primary{background:var(--lav);color:white}
-    .secondary{background:white;border:1px solid var(--border);color:var(--text)}
-    .danger{background:var(--red-soft);color:#8A4141}
-    .setup-title{margin-bottom:6px}
-    .setup-note{margin-bottom:14px}
-    .switch-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
-    .switch{width:54px;height:31px;border-radius:999px;border:none;background:#D8D0D8;position:relative;flex:0 0 auto}
-    .switch::after{content:"";position:absolute;top:3px;left:3px;width:25px;height:25px;border-radius:50%;background:white;box-shadow:0 2px 7px rgba(0,0,0,.16);transition:.18s}
-    .switch.active{background:var(--green)}
-    .switch.active::after{transform:translateX(23px)}
-    .portion-row{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center}
-    .portion-row + .portion-row{border-top:1px solid var(--border);padding-top:14px;margin-top:14px}
-    .portion-title{font-weight:700}
-    .portion-status{font-size:.85rem;color:var(--muted);margin-top:3px}
-    .controls{display:flex;align-items:center;gap:8px}
-    .counter{width:42px;height:42px;border-radius:13px;border:1px solid var(--border);background:white;font-size:1.3rem}
-    .counter.plus{background:var(--pink);border-color:var(--pink);color:white}
-    .value{min-width:54px;text-align:center;font-weight:700}
-    .bar{grid-column:1/-1;height:10px;border-radius:999px;background:#F2EDF1;overflow:hidden;margin-top:-3px}
-    .fill{height:100%;border-radius:inherit;background:var(--lav);transition:.18s}
-    .fill.safe{background:var(--green)}
-    .fill.over{background:var(--red)}
-    .daily-summary{border-radius:18px;padding:14px;margin-bottom:14px;background:var(--lav-soft)}
-    .daily-summary.alert{background:var(--red-soft)}
-    .daily-summary.good{background:var(--green-soft)}
-    .tabs{display:flex;gap:8px;margin:12px 0}
-    .tab{flex:1;border:1px solid var(--border);background:white;border-radius:13px;padding:10px}
-    .tab.active{background:var(--pink-soft);border-color:var(--pink)}
-    .stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
-    .stat{border-radius:15px;padding:10px;text-align:center;background:#FBF8FA}
-    .stat strong{display:block;font-size:1.2rem;margin-top:4px}
-    .summary-copy{line-height:1.55}
-    .summary-row{display:flex;justify-content:space-between;gap:10px;border-top:1px solid var(--border);padding:10px 0;font-size:.9rem}
-    .menu{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-    .menu .full{grid-column:1/-1}
-    .toast{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom));transform:translateX(-50%);background:#403640;color:white;padding:10px 14px;border-radius:999px;opacity:0;pointer-events:none;transition:.2s;font-size:.9rem;z-index:20}
-    .toast.show{opacity:1}
-    .small-note{font-size:.8rem;color:var(--muted);margin-top:10px;text-align:center}
-    @media(max-width:430px){
-      .app{padding-left:10px;padding-right:10px}
-      .card{padding:14px}
-      .grid-2,.menu{grid-template-columns:1fr}
-      .menu .full{grid-column:auto}
-      .portion-row{grid-template-columns:1fr}
-      .controls{justify-content:flex-end}
-      .bar{grid-column:1}
-      .stat-grid{gap:6px}
-      .stat{padding:9px 5px}
-    }
-  </style>
 </head>
 <body>
-<main class="app">
-  <section id="setupScreen" class="hidden">
-    <div class="hero">
-      <div>
-        <h1>Tina 🌷</h1>
-        <p class="muted">Tu plan, un día a la vez.</p>
-      </div>
-    </div>
-    <div class="card soft-pink">
-      <h2 class="setup-title">Tu información</h2>
-      <p class="muted setup-note">Solo guardamos estos datos en este teléfono.</p>
-      <label>Tu nombre
-        <input id="setupName" type="text" placeholder="Ej. Franciny">
-      </label>
-    </div>
-    <div class="card">
-      <h2 class="setup-title">Metas diarias</h2>
-      <p class="muted setup-note">Puedes cambiarlas después desde “Editar mi plan”.</p>
-      <div class="grid-2">
-        <label>🍳 Proteínas<input id="setupProteinas" type="number" min="0" step="1" value="14"></label>
-        <label>🥦 Vegetales<input id="setupVegetales" type="number" min="0" step="1" value="2"></label>
-        <label>🍓 Frutas<input id="setupFrutas" type="number" min="0" step="1" value="3"></label>
-        <label>🍞 Harinas<input id="setupHarinas" type="number" min="0" step="1" value="1"></label>
-        <label>🥑 Grasas<input id="setupGrasas" type="number" min="0" step="1" value="1"></label>
-      </div>
-      <button id="finishSetup" class="primary" type="button" style="margin-top:14px">Guardar mi plan</button>
-    </div>
-  </section>
-
-  <section id="appScreen" class="hidden">
-    <header class="hero">
-      <div>
-        <h1 id="greeting">Hola 🌷</h1>
-        <p class="muted">Tu plan, un día a la vez.</p>
-      </div>
-    </header>
-
-    <section class="card soft-pink">
-      <label><strong>Día que quieres registrar</strong>
-        <input id="selectedDate" type="date">
-      </label>
-      <div class="switch-row" style="margin-top:14px">
+  <main class="app-shell">
+    <section id="setupScreen" class="screen hidden" aria-labelledby="setupTitle">
+      <div class="brand brand-center">
+        <img src="assets/logo.png" alt="Logo de Tina" class="brand-logo">
         <div>
-          <strong>Ejercicio del día</strong>
-          <div id="exerciseText" class="muted">No realizado</div>
+          <h1 id="setupTitle">Tina</h1>
+          <p>Tu plan, un día a la vez.</p>
         </div>
-        <button id="exerciseSwitch" class="switch" type="button" aria-label="Marcar ejercicio"></button>
       </div>
+
+      <section class="card tint-lilac">
+        <h2>Tu información</h2>
+        <p class="helper">Todo se guarda únicamente en este dispositivo.</p>
+        <label>
+          Tu nombre
+          <input id="profileName" type="text" autocomplete="name" placeholder="Ej. Franciny">
+        </label>
+      </section>
+
+      <section class="card">
+        <h2>Metas diarias</h2>
+        <p class="helper">Escribe las porciones indicadas por tu profesional en nutrición.</p>
+        <div class="form-grid">
+          <label>🍳 Proteínas<input id="goalProteinas" type="number" min="0" step="1"></label>
+          <label>🥦 Vegetales<input id="goalVegetales" type="number" min="0" step="1"></label>
+          <label>🍓 Frutas<input id="goalFrutas" type="number" min="0" step="1"></label>
+          <label>🍞 Harinas<input id="goalHarinas" type="number" min="0" step="1"></label>
+          <label>🥑 Grasas<input id="goalGrasas" type="number" min="0" step="1"></label>
+        </div>
+      </section>
+
+      <section class="card tint-sage">
+        <h2>Meta semanal de ejercicio</h2>
+        <label>
+          Días por semana
+          <select id="exerciseGoal">
+            <option value="0">0 días</option>
+            <option value="1">1 día</option>
+            <option value="2">2 días</option>
+            <option value="3">3 días</option>
+            <option value="4">4 días</option>
+            <option value="5">5 días</option>
+            <option value="6">6 días</option>
+            <option value="7">7 días</option>
+          </select>
+        </label>
+      </section>
+
+      <button id="saveProfileButton" class="button primary" type="button">Guardar mi plan</button>
     </section>
 
-    <div id="dailySummary" class="daily-summary">Empezamos el día con calma 🌱</div>
-    <section id="portionCard" class="card"></section>
-    <button id="saveDay" class="primary" type="button">Guardar este día</button>
+    <section id="mainScreen" class="screen hidden">
+      <header class="topbar">
+        <div class="brand">
+          <img src="assets/logo.png" alt="" class="brand-logo small">
+          <div>
+            <h1 id="greeting">Hola</h1>
+            <p>Tu plan, un día a la vez.</p>
+          </div>
+        </div>
+      </header>
 
-    <section class="card">
-      <h2>Resumen</h2>
-      <div class="tabs">
-        <button id="weekTab" class="tab active" type="button">Semana</button>
-        <button id="monthTab" class="tab" type="button">Mes</button>
-      </div>
-      <div class="stat-grid">
-        <div class="stat"><span class="muted">Días</span><strong id="summaryDays">0</strong></div>
-        <div class="stat"><span class="muted">Ejercicio</span><strong id="summaryExercise">0</strong></div>
-        <div class="stat"><span class="muted">En meta</span><strong id="summaryPerfect">0</strong></div>
-      </div>
-      <div id="summaryCopy" class="summary-copy muted">Todavía no hay datos para resumir.</div>
-      <div id="summaryDetails" style="margin-top:12px"></div>
+      <section class="card tint-pink">
+        <label>
+          Día que quieres registrar
+          <input id="selectedDate" type="date">
+        </label>
+        <div class="exercise-row">
+          <div>
+            <strong>Ejercicio del día</strong>
+            <p id="exerciseLabel" class="helper">No realizado</p>
+          </div>
+          <button id="exerciseToggle" class="switch" type="button" aria-pressed="false" aria-label="Marcar ejercicio"></button>
+        </div>
+      </section>
+
+      <section id="dailyMessage" class="status-card" aria-live="polite"></section>
+
+      <section id="portionList" class="card"></section>
+
+      <section class="card">
+        <div class="section-heading">
+          <div>
+            <h2>Progreso semanal</h2>
+            <p id="weekRange" class="helper"></p>
+          </div>
+          <span id="weeklyPlanCount" class="badge"></span>
+        </div>
+        <div id="weekGrid" class="week-grid"></div>
+        <div id="weeklySummary" class="weekly-summary"></div>
+      </section>
+
+      <section class="card">
+        <h2>Opciones</h2>
+        <div class="button-grid">
+          <button id="editPlanButton" class="button secondary" type="button">Editar mi plan</button>
+          <button id="downloadReportButton" class="button secondary" type="button">Reporte de 4 semanas</button>
+          <button id="clearHistoryButton" class="button danger full" type="button">Borrar historial</button>
+        </div>
+        <p class="privacy-note">Sin cuentas, sin nube y sin base de datos.</p>
+      </section>
     </section>
+  </main>
 
-    <section class="card">
-      <h2>Opciones</h2>
-      <div class="menu" style="margin-top:12px">
-        <button id="editPlan" class="secondary" type="button">Editar mi plan</button>
-        <button id="downloadPdf" class="secondary" type="button">Descargar PDF</button>
-        <button id="clearHistory" class="danger full" type="button">Borrar historial</button>
-      </div>
-      <p class="small-note">Todo se guarda únicamente en este dispositivo.</p>
-    </section>
-  </section>
-</main>
+  <div id="toast" class="toast" aria-live="polite"></div>
 
-<div id="toast" class="toast" aria-live="polite"></div>
-
-<script>
-const categories=[
-  {id:"proteinas",label:"Proteínas",emoji:"🍳",mode:"minimum"},
-  {id:"vegetales",label:"Vegetales",emoji:"🥦",mode:"minimum"},
-  {id:"frutas",label:"Frutas",emoji:"🍓",mode:"maximum"},
-  {id:"harinas",label:"Harinas",emoji:"🍞",mode:"maximum"},
-  {id:"grasas",label:"Grasas",emoji:"🥑",mode:"maximum"}
-];
-
-let profile=JSON.parse(localStorage.getItem("portionProfile")||"null");
-let records=JSON.parse(localStorage.getItem("portionRecords")||"{}");
-let current={},exercise=false,history=[],summaryMode="week";
-
-const $=id=>document.getElementById(id);
-const dateInput=$("selectedDate");
-
-function isoLocal(date=new Date()){
-  const y=date.getFullYear(),m=String(date.getMonth()+1).padStart(2,"0"),d=String(date.getDate()).padStart(2,"0");
-  return `${y}-${m}-${d}`;
-}
-function parseDate(key){const[y,m,d]=key.split("-").map(Number);return new Date(y,m-1,d)}
-function emptyCurrent(){return Object.fromEntries(categories.map(c=>[c.id,0]))}
-function toast(text){const el=$("toast");el.textContent=text;el.classList.add("show");clearTimeout(toast.timer);toast.timer=setTimeout(()=>el.classList.remove("show"),1800)}
-function goals(){return profile.goals}
-
-function showSetup(edit=false){
-  $("setupScreen").classList.remove("hidden");
-  $("appScreen").classList.add("hidden");
-  $("setupName").value=profile?.name||"";
-  categories.forEach(c=>$("setup"+capitalize(c.id)).value=profile?.goals?.[c.id]??({proteinas:14,vegetales:2,frutas:3,harinas:1,grasas:1}[c.id]));
-  $("finishSetup").textContent=edit?"Guardar cambios":"Guardar mi plan";
-}
-function showApp(){
-  $("setupScreen").classList.add("hidden");
-  $("appScreen").classList.remove("hidden");
-  $("greeting").textContent=`Hola, ${profile.name} 🌷`;
-  dateInput.value=dateInput.value||isoLocal();
-  loadDay();
-}
-function capitalize(s){return s.charAt(0).toUpperCase()+s.slice(1)}
-
-function saveProfile(){
-  const name=$("setupName").value.trim();
-  if(!name)return toast("Escribe tu nombre");
-  const newGoals={};
-  categories.forEach(c=>{
-    const n=parseInt($("setup"+capitalize(c.id)).value,10);
-    newGoals[c.id]=Number.isFinite(n)?Math.max(0,n):0;
-  });
-  profile={name,goals:newGoals};
-  localStorage.setItem("portionProfile",JSON.stringify(profile));
-  showApp();
-  toast("Plan guardado");
-}
-
-function loadDay(){
-  const rec=records[dateInput.value];
-  current=rec?{...rec.portions}:emptyCurrent();
-  exercise=rec?!!rec.exercise:false;
-  history=[];
-  render();
-}
-
-function categoryStatus(c){
-  const value=current[c.id]||0,goal=goals()[c.id]||0;
-  if(c.mode==="minimum"){
-    if(value<goal)return {state:"under",text:`Faltan ${goal-value}`,bar:goal?Math.min(100,value/goal*100):100};
-    if(value===goal)return {state:"ok",text:"Meta cumplida ✓",bar:100};
-    return {state:"safe",text:`+${value-goal} sobre la meta · seguro`,bar:100};
-  }
-  if(value<goal)return {state:"under",text:`Faltan ${goal-value}`,bar:goal?Math.min(100,value/goal*100):100};
-  if(value===goal)return {state:"ok",text:"Meta cumplida ✓",bar:100};
-  return {state:"over",text:`+${value-goal} sobre la meta`,bar:100};
-}
-
-function renderPortions(){
-  $("portionCard").innerHTML=categories.map(c=>{
-    const value=current[c.id]||0,goal=goals()[c.id]||0,s=categoryStatus(c);
-    const cls=s.state==="over"?"over":s.state==="safe"?"safe":"";
-    return `<div class="portion-row">
-      <div><div class="portion-title">${c.emoji} ${c.label}</div><div class="portion-status">${s.text}</div></div>
-      <div class="controls">
-        <button class="counter minus" data-id="${c.id}" type="button">−</button>
-        <div class="value">${value}/${goal}</div>
-        <button class="counter plus" data-id="${c.id}" type="button">+</button>
-      </div>
-      <div class="bar"><div class="fill ${cls}" style="width:${s.bar}%"></div></div>
-    </div>`;
-  }).join("");
-  document.querySelectorAll(".plus").forEach(b=>b.addEventListener("click",()=>changeValue(b.dataset.id,1)));
-  document.querySelectorAll(".minus").forEach(b=>b.addEventListener("click",()=>changeValue(b.dataset.id,-1)));
-}
-
-function changeValue(id,delta){
-  history.push({id,previous:current[id]||0});
-  current[id]=Math.max(0,(current[id]||0)+delta);
-  render();
-}
-
-function renderExercise(){
-  $("exerciseSwitch").classList.toggle("active",exercise);
-  $("exerciseSwitch").setAttribute("aria-pressed",String(exercise));
-  $("exerciseText").textContent=exercise?"Sí realizado 🏃🏻‍♀️":"No realizado";
-}
-
-function renderDailySummary(){
-  const underGoal=categories.filter(c=>(current[c.id]||0)<goals()[c.id]);
-  const overMax=categories.filter(c=>c.mode==="maximum"&&(current[c.id]||0)>goals()[c.id]);
-  const allGoalsMet=categories.every(c=>{
-    const value=current[c.id]||0,goal=goals()[c.id];
-    return c.mode==="minimum"?value>=goal:value===goal;
-  });
-  const box=$("dailySummary");
-  box.className="daily-summary";
-  const parts=[];
-  if(underGoal.length){
-    parts.push(underGoal.map(c=>`Te faltan ${goals()[c.id]-(current[c.id]||0)} porciones de ${c.label.toLowerCase()}`).join(" y "));
-  }
-  if(overMax.length){
-    parts.push(`Te pasaste en ${overMax.map(c=>c.label.toLowerCase()).join(", ")}`);
-    box.classList.add("alert");
-  }
-  if(allGoalsMet){
-    box.classList.add("good");
-    box.textContent=exercise?"Cumpliste todo tu plan y también hiciste ejercicio. Día redondito ✨":"Cumpliste todo tu plan de hoy 🌿";
-  }else{
-    box.textContent=parts.join(". ")+".";
-  }
-}
-
-function startOfWeek(d){const x=new Date(d),day=x.getDay();x.setDate(x.getDate()+(day===0?-6:1-day));x.setHours(0,0,0,0);return x}
-function endOfWeek(d){const x=startOfWeek(d);x.setDate(x.getDate()+6);x.setHours(23,59,59,999);return x}
-function periodRecords(){
-  const selected=parseDate(dateInput.value);
-  return Object.entries(records).filter(([key])=>{
-    const d=parseDate(key);
-    if(summaryMode==="week")return d>=startOfWeek(selected)&&d<=endOfWeek(selected);
-    return d.getMonth()===selected.getMonth()&&d.getFullYear()===selected.getFullYear();
-  });
-}
-
-function analysisFor(data,c){
-  const days=data.length;if(!days)return {avg:0,pct:0,overPct:0,under:0,perfect:0};
-  const total=data.reduce((s,[,r])=>s+(r.portions?.[c.id]||0),0);
-  const avg=total/days,goal=goals()[c.id]||0,pct=goal?avg/goal*100:100;
-  const overPct=Math.max(0,pct-100);
-  const under=Math.max(0,goal-avg);
-  const perfect=data.filter(([,r])=>(r.portions?.[c.id]||0)===goal).length;
-  return {avg,pct,overPct,under,perfect};
-}
-
-function renderSummary(){
-  const data=periodRecords(),days=data.length,exerciseDays=data.filter(([,r])=>r.exercise).length;
-  $("summaryDays").textContent=days;
-  $("summaryExercise").textContent=exerciseDays;
-  const fullyGood=data.filter(([,r])=>{
-    return categories.every(c=>{
-      const v=r.portions?.[c.id]||0,g=r.goals?.[c.id]??goals()[c.id];
-      return c.mode==="minimum"?v>=g:v===g;
-    });
-  }).length;
-  $("summaryPerfect").textContent=fullyGood;
-
-  if(!days){
-    $("summaryCopy").textContent="Todavía no hay datos para resumir.";
-    $("summaryDetails").innerHTML="";
-    return;
-  }
-
-  const protein=analysisFor(data,categories[0]);
-  const veg=analysisFor(data,categories[1]);
-  const fruit=analysisFor(data,categories[2]);
-  const carbs=analysisFor(data,categories[3]);
-  const fat=analysisFor(data,categories[4]);
-
-  const sentences=[];
-  sentences.push(`${summaryMode==="week"?"Esta semana":"Este mes"} hiciste ejercicio ${exerciseDays} ${exerciseDays===1?"día":"días"}${exerciseDays>=5&&summaryMode==="week"?". ¡Muy bien!":""}`);
-  if(protein.avg<goals().proteinas)sentences.push(`No estás llegando a las proteínas: te faltan en promedio ${protein.under.toFixed(1)} porciones al día.`);
-  else sentences.push("Estás consumiendo suficientes proteínas.");
-  const excess=[];
-  if(carbs.overPct>0)excess.push(`harinas ${carbs.overPct.toFixed(0)}%`);
-  if(fat.overPct>0)excess.push(`grasas ${fat.overPct.toFixed(0)}%`);
-  if(fruit.overPct>0)excess.push(`frutas ${fruit.overPct.toFixed(0)}%`);
-  if(excess.length)sentences.push(`Te estás pasando en ${excess.join(", ")}. Cuidado con esas porciones.`);
-  else sentences.push("Harinas, grasas y frutas se mantuvieron dentro del plan.");
-  if(veg.avg>=goals().vegetales)sentences.push("Los vegetales estuvieron muy bien.");
-
-  $("summaryCopy").textContent=sentences.join(" ");
-  $("summaryDetails").innerHTML=data.sort(([a],[b])=>b.localeCompare(a)).map(([key,r])=>{
-    const label=parseDate(key).toLocaleDateString("es-CR",{weekday:"short",day:"numeric",month:"short"});
-    const alerts=categories.filter(c=>{
-      const v=r.portions?.[c.id]||0,g=r.goals?.[c.id]??goals()[c.id];
-      return c.mode==="maximum"&&v>g;
-    }).map(c=>c.label);
-    return `<div class="summary-row"><span>${label}</span><span>${r.exercise?"🏃🏻‍♀️ ":""}${alerts.length?`Alerta: ${alerts.join(", ")}`:"Sin excesos"}</span></div>`;
-  }).join("");
-}
-
-function render(){
-  renderPortions();
-  renderExercise();
-  renderDailySummary();
-  renderSummary();
-}
-
-function pdfEscape(s){
-  return s.normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^\x20-\x7E]/g,"").replace(/\\/g,"\\\\").replace(/\(/g,"\\(").replace(/\)/g,"\\)");
-}
-function downloadReportPdf(){
-  const data=periodRecords();
-  const period=summaryMode==="week"?"Resumen semanal":"Resumen mensual";
-  const title=`Tina - ${profile.name}`;
-  const lines=[
-    title,
-    period,
-    `Fecha de generacion: ${new Date().toLocaleDateString("es-CR")}`,
-    "",
-    $("summaryCopy").textContent,
-    "",
-    `Dias registrados: ${data.length}`,
-    `Dias con ejercicio: ${data.filter(([,r])=>r.exercise).length}`,
-    "",
-    "Detalle por dia:"
-  ];
-  data.sort(([a],[b])=>a.localeCompare(b)).forEach(([key,r])=>{
-    const vals=categories.map(c=>`${c.label}: ${r.portions?.[c.id]||0}/${r.goals?.[c.id]??goals()[c.id]}`).join(" | ");
-    lines.push(`${key} | Ejercicio: ${r.exercise?"Si":"No"} | ${vals}`);
-  });
-
-  const wrapped=[];
-  lines.forEach(line=>{
-    const max=92;
-    if(line.length<=max){wrapped.push(line);return}
-    let rest=line;
-    while(rest.length>max){
-      let cut=rest.lastIndexOf(" ",max);
-      if(cut<1)cut=max;
-      wrapped.push(rest.slice(0,cut));
-      rest=rest.slice(cut+1);
-    }
-    wrapped.push(rest);
-  });
-
-  const pages=[];
-  for(let i=0;i<wrapped.length;i+=46)pages.push(wrapped.slice(i,i+46));
-  const objects=[];
-  const add=o=>{objects.push(o);return objects.length};
-
-  const fontId=add("<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>");
-  const pageIds=[];
-  const contentIds=[];
-
-  pages.forEach(pageLines=>{
-    let stream="BT\n/F1 11 Tf\n50 790 Td\n";
-    pageLines.forEach((line,idx)=>{
-      if(idx>0)stream+="0 -16 Td\n";
-      stream+=`(${pdfEscape(line)}) Tj\n`;
-    });
-    stream+="ET";
-    const contentId=add(`<< /Length ${stream.length} >>\nstream\n${stream}\nendstream`);
-    contentIds.push(contentId);
-    pageIds.push(null);
-  });
-
-  const pagesIdPlaceholder=objects.length+1;
-  const pagesId=add("PAGES_PLACEHOLDER");
-  pages.forEach((_,i)=>{
-    const pid=add(`<< /Type /Page /Parent ${pagesId} 0 R /MediaBox [0 0 612 842] /Resources << /Font << /F1 ${fontId} 0 R >> >> /Contents ${contentIds[i]} 0 R >>`);
-    pageIds[i]=pid;
-  });
-  objects[pagesId-1]=`<< /Type /Pages /Kids [${pageIds.map(id=>`${id} 0 R`).join(" ")}] /Count ${pageIds.length} >>`;
-  const catalogId=add(`<< /Type /Catalog /Pages ${pagesId} 0 R >>`);
-
-  let pdf="%PDF-1.4\n";
-  const offsets=[0];
-  objects.forEach((obj,i)=>{
-    offsets.push(pdf.length);
-    pdf+=`${i+1} 0 obj\n${obj}\nendobj\n`;
-  });
-  const xref=pdf.length;
-  pdf+=`xref\n0 ${objects.length+1}\n0000000000 65535 f \n`;
-  for(let i=1;i<offsets.length;i++)pdf+=String(offsets[i]).padStart(10,"0")+" 00000 n \n";
-  pdf+=`trailer\n<< /Size ${objects.length+1} /Root ${catalogId} 0 R >>\nstartxref\n${xref}\n%%EOF`;
-
-  const blob=new Blob([pdf],{type:"application/pdf"});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement("a");
-  a.href=url;
-  a.download=`reporte_tina_${profile.name.replace(/\s+/g,"_")}.pdf`;
-  a.click();
-  setTimeout(()=>URL.revokeObjectURL(url),1000);
-}
-
-$("finishSetup").addEventListener("click",saveProfile);
-$("exerciseSwitch").addEventListener("click",()=>{exercise=!exercise;renderExercise();renderDailySummary()});
-$("saveDay").addEventListener("click",()=>{
-  records[dateInput.value]={portions:{...current},exercise,goals:{...goals()}};
-  localStorage.setItem("portionRecords",JSON.stringify(records));
-  renderSummary();
-  toast("Día guardado 💾");
-});
-$("weekTab").addEventListener("click",()=>{summaryMode="week";$("weekTab").classList.add("active");$("monthTab").classList.remove("active");renderSummary()});
-$("monthTab").addEventListener("click",()=>{summaryMode="month";$("monthTab").classList.add("active");$("weekTab").classList.remove("active");renderSummary()});
-$("editPlan").addEventListener("click",()=>showSetup(true));
-$("downloadPdf").addEventListener("click",downloadReportPdf);
-$("clearHistory").addEventListener("click",()=>{
-  if(confirm("¿Seguro que quieres borrar todo el historial guardado en este dispositivo?")){
-    records={};localStorage.removeItem("portionRecords");loadDay();toast("Historial borrado");
-  }
-});
-dateInput.addEventListener("change",loadDay);
-
-if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("./service-worker.js"));
-dateInput.value=isoLocal();
-if(profile)showApp();else showSetup();
-</script>
+  <script type="module" src="js/app.js"></script>
 </body>
 </html>
